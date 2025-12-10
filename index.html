@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hospital Patient Management System</title>
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #4b79a1, #283e51);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        color: #fff;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(10px);
+        padding: 30px;
+        margin-top: 50px;
+        width: 600px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 28px;
+    }
+
+    label {
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 8px;
+        display: block;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        border: none;
+        font-size: 15px;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #00c6ff;
+        border: none;
+        font-weight: 700;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        color: #003b50;
+        margin-bottom: 15px;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #81d4fa;
+    }
+
+    .section-title {
+        margin-top: 10px;
+        font-size: 18px;
+        text-align: center;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    .queue-box {
+        background: rgba(255,255,255,0.15);
+        padding: 12px;
+        border-radius: 10px;
+        margin-top: 10px;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .patient {
+        background: #ffffff33;
+        margin-bottom: 8px;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 15px;
+        animation: fadein 0.4s ease-in;
+    }
+
+    @keyframes fadein {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Hospital Patient Management</h1>
+
+    <label>Patient Name</label>
+    <input type="text" id="pname" placeholder="Enter name">
+
+    <label>Patient Age</label>
+    <input type="number" id="page" placeholder="Enter age">
+
+    <label>Case Type</label>
+    <select id="ptype">
+        <option value="emergency">Emergency</option>
+        <option value="normal">Normal</option>
+    </select>
+
+    <button onclick="addPatient()">Add Patient</button>
+    <button onclick="servePatient()">Serve Next Patient</button>
+
+    <h3 class="section-title">Emergency Queue</h3>
+    <div class="queue-box" id="emergencyQueue"></div>
+
+    <h3 class="section-title">Normal Queue</h3>
+    <div class="queue-box" id="normalQueue"></div>
+
+</div>
+
+<script>
+    let emergency = [];
+    let normal = [];
+
+    function addPatient() {
+        let name = document.getElementById("pname").value;
+        let age = document.getElementById("page").value;
+        let type = document.getElementById("ptype").value;
+
+        if (name === "" || age === "") {
+            alert("Please enter patient name and age.");
+            return;
+        }
+
+        let patient = {name, age};
+
+        if (type === "emergency") emergency.push(patient);
+        else normal.push(patient);
+
+        document.getElementById("pname").value = "";
+        document.getElementById("page").value = "";
+
+        updateDisplay();
+    }
+
+    function servePatient() {
+        if (emergency.length > 0) {
+            let p = emergency.shift();
+            alert("Treating EMERGENCY patient: " + p.name + ", Age " + p.age);
+        } else if (normal.length > 0) {
+            let p = normal.shift();
+            alert("Treating NORMAL patient: " + p.name + ", Age " + p.age);
+        } else {
+            alert("No patients in queue.");
+        }
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        document.getElementById("emergencyQueue").innerHTML =
+            emergency.map(p => `<div class='patient'>${p.name} (Age: ${p.age})</div>`).join("");
+
+        document.getElementById("normalQueue").innerHTML =
+            normal.map(p => `<div class='patient'>${p.name} (Age: ${p.age})</div>`).join("");
+    }
+</script>
+
+</body>
+</html>
